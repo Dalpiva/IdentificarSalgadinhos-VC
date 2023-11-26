@@ -42,7 +42,10 @@ def ajusta_saturacao(imagem):
 
 def id_imagens(id_img):
     # Pathing para as imagens a serem processadas
-    PATH = r"E:\Faculdade\5 Semestre\Processamento de Imagens\Trabalho Final\Identificar Salgadinhos\IdentificarSalgadinhos-VC\Imagens\shape_{}.jpg".format(
+    """PATH = r"E:\Faculdade\5 Semestre\Processamento de Imagens\Trabalho Final\Identificar Salgadinhos\IdentificarSalgadinhos-VC\Imagens\shape_{}.jpg".format(
+        id_img
+    )"""
+    PATH = r"E:\Faculdade\5 Semestre\Processamento de Imagens\Trabalho Final\Identificar Salgadinhos\IdentificarSalgadinhos-VC\Imagens\img_{}.jpg".format(
         id_img
     )
     img = cv2.imread(PATH)
@@ -59,14 +62,12 @@ def id_imagens(id_img):
     mascara = cv2.inRange(hsv, lower, upper)
 
     # Retira os contornos da imagem
-    contornos = cv2.findContours(mascara, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[0]
+    contornos, hierarquia = cv2.findContours(
+        mascara, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+    )
 
     # Passa de contorno em contorno retirando suas informacoes e coordenadas
     for i, contour in enumerate(contornos):
-        # O primeiro contorno eh a propria imagem, sendo assim podemos ignoralo
-        if i == 0:
-            continue
-
         # Calcula a area dos contornos para definir o tipo do salgadinho
         area = cv2.contourArea(contour)
 
@@ -80,12 +81,12 @@ def id_imagens(id_img):
         # Pega as coordenadas e salva para escrever na tela
         coords = (x_mid, y_mid)
 
-        if area > 15000:
+        if area > 22000:
             cv2.putText(img_rect, "Doritos", coords, font, 1, vermelho, 2)
         elif area > 10000:
             cv2.putText(img_rect, "Cebolitos", coords, font, 1, verde, 2)
-        elif area > 5000:
-            cv2.putText(img_rect, "Cheetos", coords, font, 1, azul, 2)
+        elif area > 3000 and hierarquia[0][i][3] == -1:
+            cv2.putText(img_rect, "Fandangos", coords, font, 1, azul, 2)
 
     # Mostra na tela as deteccoes
     cv2.imshow("Salgadinhos Detectados", img_rect)
@@ -107,7 +108,9 @@ def id_tempo_real():
         mascara = cv2.inRange(hsv, lower, upper)
 
         # Retira os contornos da imagem
-        contornos = cv2.findContours(mascara, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[0]
+        contornos, hierarquia = cv2.findContours(
+            mascara, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+        )
 
         # Passa de contorno em contorno retirando suas informacoes e coordenadas
         for i, contour in enumerate(contornos):
@@ -128,12 +131,12 @@ def id_tempo_real():
             # Pega as coordenadas e salva para escrever na tela
             coords = (x_mid, y_mid)
 
-            if area > 15000:
+            if area > 22000:
                 cv2.putText(frame_copy, "Doritos", coords, font, 1, vermelho, 2)
             elif area > 10000:
                 cv2.putText(frame_copy, "Cebolitos", coords, font, 1, verde, 2)
-            elif area > 5000:
-                cv2.putText(frame_copy, "Cheetos", coords, font, 1, azul, 2)
+            elif area > 3000 and hierarquia[0][i][3] == -1:
+                cv2.putText(frame_copy, "Fandangos", coords, font, 1, azul, 2)
 
         # Mostra a imagem
         cv2.imshow("Identificador de Salgadinhos", frame_copy)
@@ -155,21 +158,17 @@ verde = (0, 255, 0)
 azul = (255, 0, 0)
 font = cv2.FONT_HERSHEY_DUPLEX
 
-entrada = input("Camera ou Imagem (C/I):").strip().lower()
+# entrada = input("Camera ou Imagem (C/I):").strip().lower()
+entrada = "i"
 
 if entrada == "c":
-    id_tempo_real()
+    # id_tempo_real()
+    print("Funcao Desativada no Momento")
 elif entrada == "i":
-    print("Escolha a imagem:")
-    print("1: Somente Cebolitos")
-    print("2: Somente Cheetos")
-    print("3: Somente Doritos")
-    print("4: Mix 1")
-    print("5: Mix 2")
-    entrada = input("Digite o valor desejado:")
+    entrada = input("Digite a imagem desejada:")
     entrada = int(entrada)
 
-    if entrada <= 5:
+    if entrada <= 27:
         id_imagens(entrada)
     else:
         print("Entrada Invalida!")
