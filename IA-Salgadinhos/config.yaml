@@ -1,0 +1,8 @@
+path: E:\TRABALHO-VC\
+train: images
+val: images
+
+names:
+  0: Doritos
+  1: Cebolitos
+  2: Fandangos
