@@ -45,7 +45,7 @@ def id_imagens(id_img):
     """PATH = r"E:\Faculdade\5 Semestre\Processamento de Imagens\Trabalho Final\Identificar Salgadinhos\IdentificarSalgadinhos-VC\Imagens\shape_{}.jpg".format(
         id_img
     )"""
-    PATH = r"E:\Faculdade\5 Semestre\Processamento de Imagens\Trabalho Final\Identificar Salgadinhos\IdentificarSalgadinhos-VC\Imagens\img_{}.jpg".format(
+    PATH = r"C:\Users\wesle\OneDrive\Documentos\Repositorios\Salgadinhos-VC\IdentificarSalgadinhos-VC\Imagens\img_{}.jpg".format(
         id_img
     )
     img = cv2.imread(PATH)
@@ -85,6 +85,8 @@ def id_imagens(id_img):
             cv2.putText(img_rect, "Doritos", coords, font, 1, vermelho, 2)
         elif area > 10000:
             cv2.putText(img_rect, "Cebolitos", coords, font, 1, verde, 2)
+        # Chama a hierarquia para não identificar a parte de dentro do cebolitos
+        # Se o circulo possuir um pai ele não deve ser marcado
         elif area > 3000 and hierarquia[0][i][3] == -1:
             cv2.putText(img_rect, "Fandangos", coords, font, 1, azul, 2)
 
